@@ -1,0 +1,29 @@
+# ArgoCD Application - deploys sample-order-service from this repo.
+#
+# NOTE: Update the repoURL to point to YOUR fork/clone of this repository.
+#
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sample-order-service
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/<YOUR_GITHUB_USERNAME>/keploy-k8s-demo.git
+    targetRevision: main
+    path: k8s
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: staging
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

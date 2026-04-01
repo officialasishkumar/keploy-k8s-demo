@@ -1,0 +1,57 @@
+# ArgoCD Application - deploys Keploy k8s-proxy via OCI Helm chart.
+#
+# Prerequisites:
+#   1. Deploy Contour (see README for instructions)
+#   2. Create the keploy-credentials secret:
+#      kubectl create namespace keploy
+#      kubectl -n keploy create secret generic keploy-credentials \
+#        --from-literal=access-key="<YOUR_ACCESS_KEY>"
+#   3. Apply the HTTPProxy:
+#      kubectl apply -f argocd/k8s-proxy-httpproxy.yaml
+#
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: keploy-k8s-proxy
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  source:
+    chart: k8s-proxy-chart
+    repoURL: registry-1.docker.io/keploy
+    targetRevision: "3.3.10"
+    helm:
+      values: |
+        replicaCount: 1
+        environment: "staging"
+        selfHosted: false
+        fullnameOverride: "k8s-proxy"
+
+        keploy:
+          existingSecret: "keploy-credentials"
+          existingSecretKey: "access-key"
+          clusterName: "<YOUR_CLUSTER_NAME>"
+          apiServerUrl: "https://api.keploy.io"
+          ingressUrl: "https://<YOUR_INGRESS_HOST>:30080"
+
+        service:
+          type: ClusterIP
+
+        mongodb:
+          enabled: false
+        minio:
+          enabled: false
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: keploy
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
