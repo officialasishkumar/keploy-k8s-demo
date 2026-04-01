@@ -24,9 +24,9 @@ spec:
     keploy:
       existingSecret: "keploy-credentials"
       existingSecretKey: "access-key"
-      clusterName: "<YOUR_CLUSTER_NAME>"
-      apiServerUrl: "https://api.keploy.io"
-      ingressUrl: "https://<YOUR_INGRESS_HOST>:30080"
+      clusterName: "keploy-demo-CD"
+      apiServerUrl: "https://api.staging.keploy.io"
+      ingressUrl: "https://keploy-demo.local:30080"
 
     service:
       type: ClusterIP

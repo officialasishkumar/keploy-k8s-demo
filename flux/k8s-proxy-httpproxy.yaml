@@ -12,7 +12,7 @@ metadata:
     app: k8s-proxy
 spec:
   virtualhost:
-    fqdn: <YOUR_INGRESS_HOST>
+    fqdn: keploy-demo.local
     tls:
       passthrough: true
   tcpproxy:
