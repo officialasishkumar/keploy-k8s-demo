@@ -13,7 +13,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/<YOUR_GITHUB_USERNAME>/keploy-k8s-demo.git
+    repoURL: https://github.com/officialasishkumar/keploy-k8s-demo.git
     targetRevision: main
     path: k8s
 
